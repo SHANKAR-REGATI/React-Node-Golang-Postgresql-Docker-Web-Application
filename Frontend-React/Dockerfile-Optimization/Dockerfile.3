@@ -1,0 +1,20 @@
+# Pin a Specific base image version for stability
+# Use debian for easier build utilities
+FROM node:25.7.0-bullseye
+
+# Set a working directory
+WORKDIR /usr/src/app
+
+# Copy only those files needed to install dependencies(better layer caching)
+COPY package*.json ./
+
+RUN npm install
+
+# Copy the rest of the application code
+COPY . .
+
+# Build the Application
+RUN npm run build
+
+# To serve the static files produced by the build command, we use the below command
+CMD ["npx", "serve", "-s", "dist"]
