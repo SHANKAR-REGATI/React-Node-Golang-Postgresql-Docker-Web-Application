@@ -1,0 +1,22 @@
+services:
+  node-api:
+    image: node-api
+    build:
+      context: { NODE_API_DIR }
+      dockerfile: Dockerfile
+      target: development
+    command:
+      - "npm"
+      - "run"
+      - "test"
+  golang-api:
+    image: golang-api
+    build:
+      context: { GOLANG_API_DIR }
+      dockerfile: Dockerfile
+      target: development
+    command:
+      - "go"
+      - "test"
+      - "-v"
+      - "./..."
