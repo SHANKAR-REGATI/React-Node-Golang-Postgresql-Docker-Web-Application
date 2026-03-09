@@ -14,7 +14,7 @@ services:
   node-api:
     image: node-api
     build:
-      context: { NODE_API_DIR }
+      context: ${NODE_API_DIR}
       dockerfile: Dockerfile
     depends_on:
       - db
@@ -30,7 +30,7 @@ services:
   golang-api:
     image: golang-api
     build:
-      context: { GOLANG_API_DIR }
+      context: ${GOLANG_API_DIR}
       dockerfile: Dockerfile
     depends_on:
       - db
@@ -46,7 +46,7 @@ services:
   react-nginx:
     image: react-nginx
     build:
-      context: { REACT_DIR }
+      context: ${REACT_DIR}
       dockerfile: Dockerfile
     depends_on:
       - node-api

@@ -2,7 +2,7 @@ services:
   node-api:
     image: node-api
     build:
-      context: { NODE_API_DIR }
+      context: ${NODE_API_DIR}
       dockerfile: Dockerfile
       target: development
     command:
@@ -12,7 +12,7 @@ services:
   golang-api:
     image: golang-api
     build:
-      context: { GOLANG_API_DIR }
+      context: ${GOLANG_API_DIR}
       dockerfile: Dockerfile
       target: development
     command:

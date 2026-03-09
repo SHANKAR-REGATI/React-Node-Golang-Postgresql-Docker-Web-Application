@@ -14,7 +14,7 @@ services:
   node-api:
     image: node-api
     build:
-      context: { NODE_API_DIR }
+      context: ${NODE_API_DIR}
       dockerfile: Dockerfile
       target: development
     depends_on:
@@ -23,7 +23,7 @@ services:
       - DATABASE_URL=${DATABASE_URL}
     volumes:
       - type: bind
-        source: { NODE_API_DIR }
+        source: ${NODE_API_DIR}
         target: /usr/src/app
       - type: volume
         target: /usr/src/app/node_modules
@@ -37,7 +37,7 @@ services:
   golang-api:
     image: golang-api
     build:
-      context: { GOLANG_API_DIR }
+      context: ${GOLANG_API_DIR}
       dockerfile: Dockerfile
       target: development
     depends_on:
@@ -46,7 +46,7 @@ services:
       - DATABASE_URL=${DATABASE_URL}
     volumes:
       - type: bind
-        source: { GOLANG_API_DIR }
+        source: ${GOLANG_API_DIR}
         target: /app
     networks:
       - Backend
@@ -58,7 +58,7 @@ services:
   react-vite:
     image: react-vite
     build:
-      context: { REACT_DIR }
+      context: ${REACT_DIR}
       dockerfile: Dockerfile
       target: development
     depends_on:
@@ -66,7 +66,7 @@ services:
       - golang-api
     volumes:
       - type: bind
-        source: { REACT_DIR }
+        source: ${REACT_DIR}
         target: /usr/src/app
       - type: volume
         target: /usr/src/app/node_modules
