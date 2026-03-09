@@ -76,10 +76,10 @@ services:
     networks:
       - Frontend
     ports:
-      - 80:80
+      - 5173:5173
     restart: unless-stopped
 
-voulumes:
+volumes:
   pgdata:
 networks:
   Backend:
