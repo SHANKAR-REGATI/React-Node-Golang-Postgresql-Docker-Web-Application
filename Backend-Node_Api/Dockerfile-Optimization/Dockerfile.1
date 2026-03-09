@@ -1,0 +1,9 @@
+# Pin a Specific base image version for stability
+# Use slim version of node to reduce image size
+FROM node:19.6-bullseye-slim
+
+COPY . .
+
+RUN npm install
+
+CMD ["npm","run","dev"]
