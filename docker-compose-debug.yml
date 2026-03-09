@@ -1,0 +1,26 @@
+# Overlay Configuration to run debug containers for both APIs
+services:
+  node-api:
+    command:
+      - "npm"
+      - "run"
+      - "debug-docker"
+    # Inspect bebug port
+    ports:
+      - 9229:9229
+
+  golang-api:
+    command:
+      - "dlv"
+      - "debug"
+      - "/app/main.go"
+      - "--listen=:4000"
+      - "--headless=true"
+      - "--log=true"
+      - "--log-output=debugger,debuglineerr,gdbwire,lldbout,rpc"
+      - "--accept-multiclient"
+      - "--continue"
+      - "--api-version=2"
+    # delve debug port
+    ports:
+      - 4000:4000
