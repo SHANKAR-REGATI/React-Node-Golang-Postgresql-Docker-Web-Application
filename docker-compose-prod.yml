@@ -1,0 +1,64 @@
+services:
+  db:
+    image: postgres:15.1-alpine
+    environment:
+      - POSTGRES_PASSWORD=shankar
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    networks:
+      - Backend
+    ports:
+      - 5432:5432
+    restart: unless-stopped
+
+  node-api:
+    image: node-api
+    build:
+      context: { NODE_API_DIR }
+      dockerfile: Dockerfile
+    depends_on:
+      - db
+    environment:
+      - DATABASE_URL=${DATABASE_URL}
+    networks:
+      - Backend
+      - Frontend
+    ports:
+      - 3000:3000
+    restart: unless-stopped
+
+  golang-api:
+    image: golang-api
+    build:
+      context: { GOLANG_API_DIR }
+      dockerfile: Dockerfile
+    depends_on:
+      - db
+    environment:
+      - DATABASE_URL=${DATABASE_URL}
+    networks:
+      - Backend
+      - Frontend
+    ports:
+      - 8080:8080
+    restart: unless-stopped
+
+  react-nginx:
+    image: react-nginx
+    build:
+      context: { REACT_DIR }
+      dockerfile: Dockerfile
+    depends_on:
+      - node-api
+      - golang-api
+    networks:
+      - Frontend
+    ports:
+      - 80:80
+    restart: unless-stopped
+
+voulumes:
+  pgdata:
+networks:
+  Backend:
+  Frontend:
