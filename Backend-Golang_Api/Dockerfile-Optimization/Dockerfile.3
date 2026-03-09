@@ -1,0 +1,19 @@
+# Pin a Specific base image version for stability
+# Use debian for easier build utilities
+FROM golang:1.22-bullseye 
+
+# Set a working directory
+WORKDIR /app
+
+# Copy only those files needed to install dependencies(better layer caching)
+COPY go.mod go.sum ./
+
+RUN go mod download
+
+# Copy the rest of the application code
+COPY . .
+
+# Compile the code during build rather than during runtime
+RUN go build -o golang-api
+
+CMD ["./golang-api"]

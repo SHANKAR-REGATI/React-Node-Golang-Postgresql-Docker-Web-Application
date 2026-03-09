@@ -1,0 +1,9 @@
+# Pin a Specific base image version for stability
+# Use debian for easier build utilities
+FROM golang:1.22-bullseye
+
+COPY . .
+
+RUN go mod download
+
+CMD ["go", "run", "main.go"]

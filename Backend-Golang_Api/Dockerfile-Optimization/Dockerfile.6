@@ -1,0 +1,46 @@
+# Pin a Specific base image version for stability
+# Use debian for easier build utilities
+# Use Separate stage for building the application 
+FROM golang:1.22-bullseye AS build
+
+# Add non-root user for better security
+RUN useradd -u 1001 nonroot
+
+# Set a working directory
+WORKDIR /app
+
+# Copy only those files needed to install dependencies(better layer caching)
+COPY go.mod go.sum ./
+
+RUN go mod download
+
+# Copy the rest of the application code
+COPY . .
+
+# Compile the code during build rather than during runtime
+# Add Flags to statically link binary, so that binary can run anywhere
+# without any system dependencies
+# (especially in minimalistic distroless images like scratch)
+RUN go build \
+    -ldflags="-linkmode external -extldflags -static" \
+    -tags netgo \
+    -o golang-api
+
+# Use Separate Stage for Deploying the Application
+# Use Scratch distroless image as runtime doesn't need GO compiler
+FROM scratch
+
+WORKDIR /app
+
+# Copy user information from build stage (so nonroot user also exist here)
+COPY --from=build /etc/passwd /etc/passwd
+COPY --from=build /etc/group /etc/group
+
+# switch to nonroot user
+USER nonroot
+
+# Copy the build artifact(compiled binary) from build stage
+# Use --chown on copy commands to set permissions to non-root user
+COPY --from=build --chown=nonroot:nonroot /app/golang-api golang-api
+
+CMD ["./golang-api"]
