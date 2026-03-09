@@ -1,0 +1,86 @@
+services:
+  db:
+    image: postgres:15.1-alpine
+    environment:
+      - POSTGRES_PASSWORD=shankar
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    networks:
+      - Backend
+    ports:
+      - 5432:5432
+    restart: unless-stopped
+
+  node-api:
+    image: node-api
+    build:
+      context: { NODE_API_DIR }
+      dockerfile: Dockerfile
+      target: development
+    depends_on:
+      - db
+    environment:
+      - DATABASE_URL=${DATABASE_URL}
+    volumes:
+      - type: bind
+        source: { NODE_API_DIR }
+        target: /usr/src/app
+      - type: volume
+        target: /usr/src/app/node_modules
+    networks:
+      - Backend
+      - Frontend
+    ports:
+      - 3000:3000
+    restart: unless-stopped
+
+  golang-api:
+    image: golang-api
+    build:
+      context: { GOLANG_API_DIR }
+      dockerfile: Dockerfile
+      target: development
+    depends_on:
+      - db
+    environment:
+      - DATABASE_URL=${DATABASE_URL}
+    volumes:
+      - type: bind
+        source: { GOLANG_API_DIR }
+        target: /app
+    networks:
+      - Backend
+      - Frontend
+    ports:
+      - 8080:8080
+    restart: unless-stopped
+
+  react-vite:
+    image: react-vite
+    build:
+      context: { REACT_DIR }
+      dockerfile: Dockerfile
+      target: development
+    depends_on:
+      - node-api
+      - golang-api
+    volumes:
+      - type: bind
+        source: { REACT_DIR }
+        target: /usr/src/app
+      - type: volume
+        target: /usr/src/app/node_modules
+      - type: bind
+        source: ${PWD}/vite.config.js
+        target: /usr/src/app/vite.config.js
+    networks:
+      - Frontend
+    ports:
+      - 80:80
+    restart: unless-stopped
+
+voulumes:
+  pgdata:
+networks:
+  Backend:
+  Frontend:
