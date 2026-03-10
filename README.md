@@ -32,7 +32,7 @@
   - Environment variable configuration
   - Using .dockerignore to avoid unnecessary files being copied in to the image
 
-  ## - Image Optimization Resuilts
+  ## - Image Optimization Results
   - **Node-image-optimization**
 
   ![](./readme-assets/Node-image-optimization.png)
@@ -116,15 +116,17 @@ docker compose -f docker-compose-dev.yml up --build -d
     ```
     http://localhost:8080
     ```
+    > **NOTE - Now the Changes made in code will be reflected automatically in to application running inside container and there is no need of starting and stopping containers as and when code changes.**
+     > 
+     > **NOTE - Used bind mounts on source code to have Hot Reloading.**
+
   -  **To Stop and remove Containers**
      ```
      docker compose -f docker-compose-dev.yml down -v
      ```
      ![](./readme-assets/dev-stop.png)
 
-     > **NOTE - Now the Changes made in code will be reflected automatically in to application running inside container and there is no need of starting and stopping containers as and when code changes.**
-     > 
-     > **NOTE - Used bind mounts on source code to have Hot Reloading.**
+
 ### IV) Run Tests
   - **Test for Node.js Api**
      ```
@@ -156,6 +158,7 @@ docker compose -f docker-compose-dev.yml -f docker-compose-debug.yml up --build 
      ```
      docker compose -f docker-compose-dev.yml down -v
      ```
+
 
 
 
